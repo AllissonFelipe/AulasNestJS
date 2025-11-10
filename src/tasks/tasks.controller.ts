@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import type { ITask } from './task.model';
+import { CreateTaskDto } from './create-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -20,5 +21,10 @@ export class TasksController {
         return task;
         }
         throw new NotFoundException();
+    }
+
+    @Post()
+    public create(@Body() createTaskDto: CreateTaskDto) {
+        return this.tasksService.create(createTaskDto);
     }
 }
