@@ -7,18 +7,21 @@ import { randomUUID } from 'crypto';
 export class TasksService {
   private tasks: ITask[] = [];
 
-  findAll(): ITask[] {
+  public findAll(): ITask[] {
     return this.tasks;
   }
-  findOne(id: string): ITask | undefined {
+  public findOne(id: string): ITask | undefined {
     return this.tasks.find((task) => task.id === id);
   }
-  create(@Body() createTaskDto: CreateTaskDto): ITask {
+  public create(@Body() createTaskDto: CreateTaskDto): ITask {
     const task: ITask = {
       id: randomUUID(),
       ...createTaskDto,
     };
     this.tasks.push(task);
     return task;
+  }
+  public deleteTask(id: string): void {
+    this.tasks = this.tasks.filter((task) => task.id != id);
   }
 }
