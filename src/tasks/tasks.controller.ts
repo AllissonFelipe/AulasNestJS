@@ -1,31 +1,52 @@
-/* eslint-disable prettier/prettier */
-import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import type { ITask } from './task.model';
 import { CreateTaskDto } from './create-task.dto';
 import { FindOneParams } from './find-one-params';
+import { UpdateTaskStatusDto } from './update-task-status.dto';
 
 @Controller('tasks')
 export class TasksController {
-  
-    constructor(private readonly tasksService: TasksService) {}
-  
-    @Get()
-    public findAll(): ITask[] {
-        return this.tasksService.findAll();
-    }
+  constructor(private readonly tasksService: TasksService) {}
 
-    @Get('/:id')
-    public findOne(@Param() params: FindOneParams): ITask {
-        const task = this.tasksService.findOne(params.id);
-        if (task) {
-        return task;
-        }
-        throw new NotFoundException();
-    }
+  @Get()
+  public findAll(): ITask[] {
+    return this.tasksService.findAll();
+  }
 
-    @Post()
-    public create(@Body() createTaskDto: CreateTaskDto) {
-        return this.tasksService.create(createTaskDto);
+  @Get('/:id')
+  public findOne(@Param() params: FindOneParams): ITask {
+    return this.findOneOrFail(params.id);
+  }
+
+  @Post()
+  public create(@Body() createTaskDto: CreateTaskDto) {
+    return this.tasksService.create(createTaskDto);
+  }
+
+  @Patch('/:id/status')
+  public upadateTaskStatus(
+    @Param() params: FindOneParams,
+    @Body() body: UpdateTaskStatusDto,
+  ): ITask {
+    const task = this.findOneOrFail(params.id);
+    task.status = body.status;
+    return task;
+  }
+
+  private findOneOrFail(id: string): ITask {
+    const task = this.tasksService.findOne(id);
+    if (!task) {
+      throw new NotFoundException();
     }
+    return task;
+  }
 }
