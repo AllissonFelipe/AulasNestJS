@@ -1,18 +1,24 @@
-import { Controller, Get, Param } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { ITask } from './task.model';
+import type { ITask } from './task.model';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
-  @Get()
-  public findAll(): ITask[] {
-    return this.tasksService.findAll();
-  }
+  
+    constructor(private readonly tasksService: TasksService) {}
+  
+    @Get()
+    public findAll(): ITask[] {
+        return this.tasksService.findAll();
+    }
 
-  @Get('/:id')
-  public findOne(@Param('id') id: string): ITask {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return this.tasksService.findOne(id);
-  }
+    @Get('/:id')
+    public findOne(@Param('id') id: string): ITask {
+        const task = this.tasksService.findOne(id);
+        if (task) {
+        return task;
+        }
+        throw new NotFoundException();
+    }
 }
