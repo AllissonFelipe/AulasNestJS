@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Injectable, Logger } from '@nestjs/common';
 import { DummyService } from './dummy/dummy.service';
 import { LoggerService } from './logger/logger.service';
