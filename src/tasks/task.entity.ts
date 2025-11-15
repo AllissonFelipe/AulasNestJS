@@ -9,20 +9,20 @@ export class Task {
   @Column({
     type: 'varchar',
     length: 100,
-    nullable: false
+    nullable: false,
   })
   title: string;
 
   @Column({
     type: 'text',
-    nullable: false
+    nullable: false,
   })
   description: string;
 
   @Column({
     type: 'enum',
     enum: TaskStatus,
-    default: TaskStatus.OPEN
+    default: TaskStatus.OPEN,
   })
   status: TaskStatus;
 }

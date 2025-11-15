@@ -1,17 +1,17 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DummyService } from './dummy/dummy.service';
 import { MessageFormatterService } from './message-formatter/message-formatter.service';
 import { LoggerService } from './logger/logger.service';
 import { TasksModule } from './tasks/tasks.module';
-import { appConfig } from './config/app.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { appConfig } from './config/app.config';
 import { appConfigSchema, ConfigType } from './config/config.types';
 import { typeOrmConfig } from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypedConfigService } from './config/typed-config.services';
 import { Task } from './tasks/task.entity';
+import { TypedConfigService } from './config/typed-config.services';
 
 @Module({
   imports: [

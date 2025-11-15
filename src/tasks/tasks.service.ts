@@ -1,7 +1,6 @@
-import { Body, Injectable } from '@nestjs/common';
-import * as taskModel from './task.model';
 import { CreateTaskDto } from './create-task.dto';
-import { randomUUID } from 'crypto';
+import { TaskStatus } from './task.model';
+import { Injectable } from '@nestjs/common';
 import { UpdateTaskDto } from './update-task.dto';
 import { WrongTaskStatusException } from './exceptions/wrong-task-status.exception';
 import { Repository } from 'typeorm';
@@ -10,53 +9,51 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TasksService {
-  private tasks: taskModel.ITask[] = [];
   constructor(
     @InjectRepository(Task)
-    private readonly tasksRepository: Repository<Task> 
+    private readonly tasksRepository: Repository<Task>,
   ) {}
 
-  public findAll(): taskModel.ITask[] {
-    return this.tasks;
+  public async findAll(): Promise<Task[]> {
+    return await this.tasksRepository.find();
   }
-  public findOne(id: string): taskModel.ITask | undefined {
-    return this.tasks.find((task) => task.id === id);
+
+  public async findOne(id: string): Promise<Task | null> {
+    return await this.tasksRepository.findOneBy({ id });
   }
-  public create(@Body() createTaskDto: CreateTaskDto): taskModel.ITask {
-    const task: taskModel.ITask = {
-      id: randomUUID(),
-      ...createTaskDto,
-    };
-    this.tasks.push(task);
-    return task;
+
+  public async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    return await this.tasksRepository.save(createTaskDto);
   }
-  public updateTask(
-    task: taskModel.ITask,
+
+  public async updateTask(
+    task: Task,
     updateTaskDto: UpdateTaskDto,
-  ): taskModel.ITask {
+  ): Promise<Task> {
     if (
       updateTaskDto.status &&
       !this.isValidStatusTransition(task.status, updateTaskDto.status)
     ) {
       throw new WrongTaskStatusException();
     }
+
     Object.assign(task, updateTaskDto);
-    return task;
+    return await this.tasksRepository.save(task);
   }
-  public deleteTask(task: taskModel.ITask): void {
-    this.tasks = this.tasks.filter(
-      (filteredTask) => filteredTask.id != task.id,
-    );
-  }
+
   private isValidStatusTransition(
-    currentStatus: taskModel.TaskStatus,
-    newStatus: taskModel.TaskStatus,
+    currentStatus: TaskStatus,
+    newStatus: TaskStatus,
   ): boolean {
     const statusOrder = [
-      taskModel.TaskStatus.OPEN,
-      taskModel.TaskStatus.IN_PROGRESS,
-      taskModel.TaskStatus.DONE,
+      TaskStatus.OPEN,
+      TaskStatus.IN_PROGRESS,
+      TaskStatus.DONE,
     ];
     return statusOrder.indexOf(currentStatus) <= statusOrder.indexOf(newStatus);
+  }
+
+  public async deleteTask(task: Task): Promise<void> {
+    await this.tasksRepository.delete(task);
   }
 }
