@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { TaskStatus } from './task.model';
 import { User } from 'src/users/user.entity';
@@ -38,7 +39,6 @@ export class Task {
   user: User;
 
 
-
-  @OneToMany(() => TaskLabel, (label) => label.task)
+  @OneToMany(() => TaskLabel, (label) => label.task, { cascade: true, orphanedRowAction: 'delete' })
   labels: TaskLabel[];
 }
