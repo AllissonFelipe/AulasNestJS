@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { Task } from "./task.entity";
 
 @Entity()
+@Unique(['name', 'taskId'])
 export class TaskLabel {
     
     @PrimaryGeneratedColumn('uuid')
@@ -13,8 +14,9 @@ export class TaskLabel {
     name: string;
    
     @Column()
+    @Index()
     taskId: string;
-    @ManyToOne(() => Task, (task) => task.labels)
+    @ManyToOne(() => Task, (task) => task.labels, { nullable: true })
     task: Task;
     
     @CreateDateColumn()

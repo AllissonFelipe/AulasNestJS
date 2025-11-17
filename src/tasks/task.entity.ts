@@ -38,8 +38,7 @@ export class Task {
   user: User;
 
 
-  @Column()
-  taskLabelId: string;
+
   @OneToMany(() => TaskLabel, (label) => label.task)
   labels: TaskLabel[];
 }
