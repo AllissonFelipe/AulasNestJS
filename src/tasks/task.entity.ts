@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { TaskStatus } from './task.model';
 import { User } from 'src/users/user.entity';
+import { TaskLabel } from './task-label-entity';
 
 // one-to-many
 // User that has many Tasks
@@ -33,7 +34,12 @@ export class Task {
 
   @Column()
   userId: string;
-
-  @ManyToOne(() => User, (user) => user.tasks, {nullable: false})
+  @ManyToOne(() => User, (user) => user.tasks)
   user: User;
+
+
+  @Column()
+  taskLabelId: string;
+  @OneToMany(() => TaskLabel, (label) => label.task)
+  labels: TaskLabel[];
 }
