@@ -23,6 +23,6 @@ export class CreateTaskDto {
 
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => CreateTaskDto )
+  @Type(() => CreateTaskLabelDto )
   labels?: CreateTaskLabelDto[];
 }
