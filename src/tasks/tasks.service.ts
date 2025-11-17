@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { CreateTaskDto } from './create-task.dto';
 import { TaskStatus } from './task.model';
 import { Injectable } from '@nestjs/common';
@@ -59,11 +60,20 @@ export class TasksService {
     task: Task,
     labelDtos: CreateTaskLabelDto[],
   ): Promise<Task> {
-    const labels = labelDtos.map((label) =>
-      this.labelsRepository.create(label),
+    // 1) Deduplicate DTos
+    // 2) Get existing names
+    // 3) New labels aren't already existing ones
+    // 4) We save new ones, only if there are any real new ones
+    const names = new Set(task.labels.map((label) => label.name));
+    const labels = this.getUniqueLabels(labelDtos)
+      .filter((dto) => !names.has(dto.name))
+      .map((label) => this.labelsRepository.create(label),
     );
-    task.labels = [...task.labels, ...labels];
-    return await this.tasksRepository.save(task);
+    if(labels.length) {
+      task.labels = [...task.labels, ...labels];
+      return await this.tasksRepository.save(task);
+    }
+    return task;
   }
 
   public async deleteTask(task: Task): Promise<void> {
