@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { CreateTaskDto } from './create-task.dto';
 import { TaskStatus } from './task.model';
 import { Injectable } from '@nestjs/common';
@@ -15,7 +14,6 @@ export class TasksService {
   constructor(
     @InjectRepository(Task)
     private readonly tasksRepository: Repository<Task>,
-
     @InjectRepository(TaskLabel)
     private readonly labelsRepository: Repository<TaskLabel>,
   ) {}
@@ -25,15 +23,14 @@ export class TasksService {
   }
 
   public async findOne(id: string): Promise<Task | null> {
-    return await this.tasksRepository.findOne({ 
+    return await this.tasksRepository.findOne({
       where: { id },
-      relations: ['labels'], 
-     });
+      relations: ['labels'],
+    });
   }
 
   public async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     // await this.tasksRepository.create({
-
     // });
     return await this.tasksRepository.save(createTaskDto);
   }
@@ -53,8 +50,13 @@ export class TasksService {
     return await this.tasksRepository.save(task);
   }
 
-  public async addLabels(task: Task, labelDtos: CreateTaskLabelDto[]): Promise<Task> {
-    const labels = labelDtos.map((label) => this.labelsRepository.create(label));
+  public async addLabels(
+    task: Task,
+    labelDtos: CreateTaskLabelDto[],
+  ): Promise<Task> {
+    const labels = labelDtos.map((label) =>
+      this.labelsRepository.create(label),
+    );
     task.labels = [...task.labels, ...labels];
     return await this.tasksRepository.save(task);
   }

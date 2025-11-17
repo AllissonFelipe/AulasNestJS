@@ -13,10 +13,11 @@ import {
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './create-task.dto';
+import { FindOneParams } from './find-one-params';
 import { UpdateTaskDto } from './update-task.dto';
 import { WrongTaskStatusException } from './exceptions/wrong-task-status.exception';
 import { Task } from './task.entity';
-import { FindOneParams } from './find-one-params';
+import { CreateTaskLabelDto } from './create-task-label.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -36,10 +37,6 @@ export class TasksController {
   public async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
     return await this.tasksService.createTask(createTaskDto);
   }
-
-  // 1) Create a endpoint POST :id/labels
-  // 2) addLabels - mixing existing labels with new ones
-  // 3) 500 - we need a method to get unique labels to store
 
   @Patch('/:id')
   public async updateTask(
@@ -63,6 +60,19 @@ export class TasksController {
     const task = await this.findOneOrFail(params.id);
     await this.tasksService.deleteTask(task);
   }
+
+  @Post(':id/labels')
+  async addLabels(
+    @Param() { id }: FindOneParams,
+    @Body() labels: CreateTaskLabelDto[],
+  ): Promise<Task> {
+    const task = await this.findOneOrFail(id);
+    return await this.tasksService.addLabels(task, labels);
+  }
+
+  // 1) Create an endpoint POST :id/labels
+  // 2) addLabels - mixing existing labels with new ones
+  // 3) 500 - we need a method to get unique labels to store
 
   private async findOneOrFail(id: string): Promise<Task> {
     const task = await this.tasksService.findOne(id);
