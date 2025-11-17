@@ -16,7 +16,7 @@ export class TaskLabel {
     @Column()
     @Index()
     taskId: string;
-    @ManyToOne(() => Task, (task) => task.labels, { onDelete: 'CASCADE' } )
+    @ManyToOne(() => Task, (task) => task.labels, { onDelete: 'CASCADE', orphanedRowAction: 'delete' } )
     task: Task;
     
     @CreateDateColumn()
