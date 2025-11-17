@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   BadRequestException,
   Body,
@@ -68,6 +69,13 @@ export class TasksController {
   ): Promise<Task> {
     const task = await this.findOneOrFail(id);
     return await this.tasksService.addLabels(task, labels);
+  }
+
+  @Delete(':id/labels')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeLabels(@Param() { id }: FindOneParams, @Body() labelNames: string[]): Promise<void> {
+    const task = await this.findOneOrFail(id);
+    await this.tasksService.removeLabels(task, labelNames);
   }
 
   // 1) Create an endpoint POST :id/labels
