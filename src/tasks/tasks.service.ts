@@ -4,7 +4,7 @@ import { TaskStatus } from './task.model';
 import { Injectable } from '@nestjs/common';
 import { UpdateTaskDto } from './update-task.dto';
 import { WrongTaskStatusException } from './exceptions/wrong-task-status.exception';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskLabelDto } from './create-task-label.dto';
@@ -21,18 +21,32 @@ export class TasksService {
     private readonly labelsRepository: Repository<TaskLabel>,
   ) {}
 
+
+
   public async findAll(
     filters: FindTaskParams,
     pagination: PaginationParams): Promise<[Task[], number]> {
+    
+    const where: FindOptionsWhere<Task> = {};
+    
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.search?.trim()) {
+      where.title = Like(`%${filters.search}%`)
+      where.description = Like(`%${filters.search}%`)
+    }
+    
     return await this.tasksRepository.findAndCount({
-      where: {
-        status: filters.status
-      },
+      where,
       relations: ['labels'],
       skip: pagination.offset,
       take: pagination.limit,
     });
   }
+
+
 
   public async findOne(id: string): Promise<Task | null> {
     return await this.tasksRepository.findOne({
