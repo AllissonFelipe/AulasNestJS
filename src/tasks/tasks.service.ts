@@ -4,7 +4,7 @@ import { TaskStatus } from './task.model';
 import { Injectable } from '@nestjs/common';
 import { UpdateTaskDto } from './update-task.dto';
 import { WrongTaskStatusException } from './exceptions/wrong-task-status.exception';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskLabelDto } from './create-task-label.dto';
@@ -14,6 +14,7 @@ import { PaginationParams } from 'src/common/pagination.params';
 
 @Injectable()
 export class TasksService {
+  
   constructor(
     @InjectRepository(Task)
     private readonly tasksRepository: Repository<Task>,
@@ -21,29 +22,27 @@ export class TasksService {
     private readonly labelsRepository: Repository<TaskLabel>,
   ) {}
 
-
-
   public async findAll(
     filters: FindTaskParams,
-    pagination: PaginationParams): Promise<[Task[], number]> {
-    
-    const where: FindOptionsWhere<Task> = {};
-    
+    pagination: PaginationParams,
+  ): Promise<[Task[], number]> {
+    const query = this.tasksRepository
+      .createQueryBuilder('task')
+      .leftJoinAndSelect('task.labels', 'labels');
+
     if (filters.status) {
-      where.status = filters.status;
+      query.andWhere('task.status = :status', { status: filters.status });
     }
 
     if (filters.search?.trim()) {
-      where.title = Like(`%${filters.search}%`)
-      where.description = Like(`%${filters.search}%`)
+      query.andWhere(
+        '(task.title ILIKE :search OR task.description ILIKE :search)',
+        { search: `%${filters.search}%` },
+      );
     }
-    
-    return await this.tasksRepository.findAndCount({
-      where,
-      relations: ['labels'],
-      skip: pagination.offset,
-      take: pagination.limit,
-    });
+
+    query.skip(pagination.offset).take(pagination.limit);
+    return query.getManyAndCount();
   }
 
 
