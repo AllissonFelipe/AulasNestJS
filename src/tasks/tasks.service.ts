@@ -51,12 +51,11 @@ export class TasksService {
       .getQuery();
       
       query.andWhere(`task.id IN ${subQuery}`)
-
     }
 
+    query.orderBy(`task.${filters.sortBy}`, filters.sortOrder);
+
     query.skip(pagination.offset).take(pagination.limit);
-
-
     return query.getManyAndCount();
   }
 

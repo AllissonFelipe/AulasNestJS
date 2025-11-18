@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { TaskStatus } from './task.model';
 import { User } from 'src/users/user.entity';
 import { TaskLabel } from './task-label-entity';
@@ -41,4 +41,10 @@ export class Task {
 
   @OneToMany(() => TaskLabel, (label) => label.task, { cascade: true })
   labels: TaskLabel[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+  
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
