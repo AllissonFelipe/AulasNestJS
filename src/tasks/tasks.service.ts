@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable prettier/prettier */
 import { CreateTaskDto } from './create-task.dto';
 import { TaskStatus } from './task.model';
@@ -39,6 +40,13 @@ export class TasksService {
         '(task.title ILIKE :search OR task.description ILIKE :search)',
         { search: `%${filters.search}%` },
       );
+    }
+
+    if(filters.labels?.length) {
+      query.andWhere(
+        'labels.name IN (:...names)',
+        { names: filters.labels },
+      )
     }
 
     query.skip(pagination.offset).take(pagination.limit);
