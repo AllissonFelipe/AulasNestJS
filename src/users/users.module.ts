@@ -11,6 +11,7 @@ import { UserService } from './user/user.service';
 import { User } from './user.entity';
 import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { AuthController } from './auth/auth.controller';
         }) as JwtModuleOptions,
     }),
   ],
-  providers: [PasswordService, UserService, AuthService],
+  providers: [PasswordService, UserService, AuthService, AuthGuard],
   controllers: [AuthController],
 })
 export class UsersModule {}
