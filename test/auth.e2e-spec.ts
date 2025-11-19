@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
@@ -16,10 +17,20 @@ describe('AppController (e2e)', () => {
     await testSetup.teardown();
   });
 
-  it('/ (GET)', () => {
+  const testUser = {
+    email: 'test@example.com',
+    password: 'P assword123!',
+    name: 'Test User',
+  };
+  it('/auth/register (POST)', () => {
     return request(testSetup.app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect((res) => expect(res.text).toContain('Hello World'));
+      .post('/auth/register')
+      .send(testUser)
+      .expect(201)
+      .expect((res) => {
+        expect(res.body.email).toBe(testUser.email);
+        expect(res.body.name).toBe(testUser.name);
+        expect(res.body).not.toHaveProperty('password');
+      });
   });
 });
