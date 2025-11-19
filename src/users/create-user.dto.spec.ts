@@ -31,8 +31,6 @@ describe('CreateUserDto', () => {
     expect(errors[0].constraints).toHaveProperty('isEmail');
   });
 
-
-
   // ---- TEST(PASSWORD) ----
   const testPassword = async (password: string, message: string) => {
     dto.password = password;
