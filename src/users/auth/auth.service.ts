@@ -24,6 +24,8 @@ export class AuthService {
     // 1) return the user
     // 2) return the user + token
     // 3) return the token
+
+    return user;
   }
 }
 
