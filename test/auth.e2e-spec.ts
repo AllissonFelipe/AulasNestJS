@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import request from 'supertest';
@@ -59,5 +61,27 @@ describe('AppController (e2e)', () => {
 
     expect(response.status).toBe(201);
     expect(response.body.accessToken).toBeDefined();
+  });
+
+  it('/auth/profile (GET)', async () => {
+    await request(testSetup.app.getHttpServer())
+      .post('/auth/register')
+      .send(testUser);
+
+    const response = await request(testSetup.app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: testUser.email, password: testUser.password });
+
+    const token = response.body.accessToken;
+    return await request(testSetup.app.getHttpServer())
+      .get('/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.email).toBe(testUser.email);
+        expect(res.body.name).toBe(testUser.name);
+        console.log(res.body);
+        expect(res.body).not.toHaveProperty('password');
+      });
   });
 });
