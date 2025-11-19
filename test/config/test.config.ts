@@ -13,7 +13,7 @@ export const testConfig = {
   },
   auth: {
     jwt: {
-      secret: 'secret123',
+      secret: 'secret-123',
       expiresIn: '1m',
     },
   },
