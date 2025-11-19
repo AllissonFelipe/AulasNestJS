@@ -1,5 +1,10 @@
+/* eslint-disable prettier/prettier */
+// jwt:
+//   secret
+
 import { registerAs } from '@nestjs/config';
 
+//   expiresIn
 export interface AuthConfig {
   jwt: {
     secret: string;

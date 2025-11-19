@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,6 +16,7 @@ import { TypedConfigService } from './config/typed-config.services';
 import { User } from './users/user.entity';
 import { TaskLabel } from './tasks/task-label-entity';
 import { authConfig } from './config/auth.config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { authConfig } from './config/auth.config';
       },
     }),
     TasksModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [

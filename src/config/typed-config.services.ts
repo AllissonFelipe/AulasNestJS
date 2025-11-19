@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ConfigService } from '@nestjs/config';
 import { ConfigType } from './config.types';
 
