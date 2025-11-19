@@ -30,6 +30,6 @@ export class AuthController {
       login.email,
       login.password,
     );
-    return { accessToken };
+    return new LoginResponse({ accessToken });
   }
 }
