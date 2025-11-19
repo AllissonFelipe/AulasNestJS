@@ -33,4 +33,18 @@ describe('AppController (e2e)', () => {
         expect(res.body).not.toHaveProperty('password');
       });
   });
+
+  it('/auth/register (POST) - duplicate email', async () => {
+    await request(testSetup.app.getHttpServer())
+      .post('/auth/register')
+      .send(testUser);
+
+    return await request(testSetup.app.getHttpServer())
+      .post('/auth/register')
+      .send(testUser)
+      .expect(409)
+      .expect((res) => {
+        expect(res.body.message).toBe('Email already exists');
+      });
+  });
 });
