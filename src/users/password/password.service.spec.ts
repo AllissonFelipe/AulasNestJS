@@ -7,7 +7,6 @@ jest.mock('bcrypt', () => ({
   compare: jest.fn(),
 }));
 
-
 describe('PasswordService', () => {
   let service: PasswordService;
 
@@ -22,7 +21,6 @@ describe('PasswordService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
 
   // hash()
   // plain text -> hash

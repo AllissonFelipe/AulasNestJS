@@ -1,7 +1,6 @@
 import { validate } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 describe('CreateUserDto', () => {
   let dto = new CreateUserDto();
   beforeEach(() => {

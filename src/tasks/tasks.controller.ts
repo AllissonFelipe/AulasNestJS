@@ -31,7 +31,7 @@ export class TasksController {
   @Get()
   public async findAll(
     @Query() filters: FindTaskParams,
-    @Query() pagination: PaginationParams
+    @Query() pagination: PaginationParams,
   ): Promise<PaginationResponse<Task>> {
     const [items, total] = await this.tasksService.findAll(filters, pagination);
     return {
@@ -41,8 +41,8 @@ export class TasksController {
         ...pagination,
         // offset: pagination.offset,
         // limit: pagination.limit,
-      }
-    }
+      },
+    };
   }
 
   @Get('/:id')
@@ -89,7 +89,10 @@ export class TasksController {
 
   @Delete(':id/labels')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async removeLabels(@Param() { id }: FindOneParams, @Body() labelNames: string[]): Promise<void> {
+  async removeLabels(
+    @Param() { id }: FindOneParams,
+    @Body() labelNames: string[],
+  ): Promise<void> {
     const task = await this.findOneOrFail(id);
     await this.tasksService.removeLabels(task, labelNames);
   }

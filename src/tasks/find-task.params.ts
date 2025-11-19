@@ -1,7 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IsEnum, IsIn, IsOptional, IsString, MinLength } from 'class-validator';
 import { TaskStatus } from './task.model';
 import { Transform } from 'class-transformer';

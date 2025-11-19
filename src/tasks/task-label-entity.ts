@@ -1,29 +1,38 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
-import { Task } from "./task.entity";
+
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Task } from './task.entity';
 
 @Entity()
 @Unique(['name', 'taskId'])
 export class TaskLabel {
-    
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-   
-    @Column()
-    name: string;
-   
-    @Column()
-    @Index()
-    taskId: string;
-    @ManyToOne(() => Task, (task) => task.labels, { onDelete: 'CASCADE', orphanedRowAction: 'delete' } )
-    task: Task;
-    
-    @CreateDateColumn()
-    createdAt: Date;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @Column()
+  name: string;
+
+  @Column()
+  @Index()
+  taskId: string;
+  @ManyToOne(() => Task, (task) => task.labels, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  task: Task;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
-
-
