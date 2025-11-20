@@ -4,7 +4,7 @@ export const testConfig = {
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: 'senac@02',
+    password: 'postgres',
     database: 'tasks_e2e',
     synchronize: true,
   },
